@@ -3,6 +3,7 @@ package com.example.cqaai.tutorpal.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -27,19 +28,17 @@ public class ResetPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         inputEmail = (EditText) findViewById(R.id.email);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
-        btnBack = (Button) findViewById(R.id.btn_back);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         auth = FirebaseAuth.getInstance();
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override

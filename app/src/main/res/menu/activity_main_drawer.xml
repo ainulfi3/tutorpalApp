@@ -8,10 +8,7 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/nav_home" />
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_account_circle_black_24dp"
-            android:title="@string/nav_profile" />
+
         <item
             android:id="@+id/nav_inbox"
             android:icon="@drawable/ic_inbox_black_24dp"
@@ -30,6 +27,10 @@
 
     <item android:title="Other">
         <menu>
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/ic_account_circle_black_24dp"
+                android:title="@string/nav_profile" />
             <item
                 android:id="@+id/nav_about_us"
                 android:title="@string/nav_about_us" />

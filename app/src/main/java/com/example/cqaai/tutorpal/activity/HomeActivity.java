@@ -27,7 +27,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import com.example.cqaai.tutorpal.R;
 import com.example.cqaai.tutorpal.fragment.HomeFragment;
-import com.example.cqaai.tutorpal.fragment.ProfileFragment;
 import com.example.cqaai.tutorpal.fragment.NotificationsFragment;
 import com.example.cqaai.tutorpal.fragment.InboxFragment;
 import com.example.cqaai.tutorpal.fragment.SettingsFragment;
@@ -232,20 +231,20 @@ public class HomeActivity extends AppCompatActivity {
                 // home
                 HomeFragment homeFragment = new HomeFragment();
                 return homeFragment;
+//            case 1:
+//                // profile
+//                ProfileFragment profileFragment = new ProfileFragment();
+//                return profileFragment;
             case 1:
-                // profile
-                ProfileFragment profileFragment = new ProfileFragment();
-                return profileFragment;
-            case 2:
                 // Inbox fragment
                 InboxFragment inboxFragment = new InboxFragment();
                 return inboxFragment;
-            case 3:
+            case 2:
                 // notifications fragment
                 NotificationsFragment notificationsFragment = new NotificationsFragment();
                 return notificationsFragment;
 
-            case 4:
+            case 3:
                 // settings fragment
                 SettingsFragment settingsFragment = new SettingsFragment();
                 return settingsFragment;
@@ -277,22 +276,27 @@ public class HomeActivity extends AppCompatActivity {
                         navItemIndex = 0;
                         CURRENT_TAG = TAG_HOME;
                         break;
-                    case R.id.nav_profile:
-                        navItemIndex = 1;
-                        CURRENT_TAG = TAG_PROFILE;
-                        break;
+//                    case R.id.nav_profile:
+//                        navItemIndex = 1;
+//                        CURRENT_TAG = TAG_PROFILE;
+//                        break;
                     case R.id.nav_inbox:
-                        navItemIndex = 2;
+                        navItemIndex = 1;
                         CURRENT_TAG = TAG_INBOX;
                         break;
                     case R.id.nav_notifications:
-                        navItemIndex = 3;
+                        navItemIndex = 2;
                         CURRENT_TAG = TAG_NOTIFICATIONS;
                         break;
                     case R.id.nav_settings:
-                        navItemIndex = 4;
+                        navItemIndex = 3;
                         CURRENT_TAG = TAG_SETTINGS;
                         break;
+                    case R.id.nav_profile:
+                        // launch new intent instead of loading fragment
+                        startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+                        drawer.closeDrawers();
+                        return true;
                     case R.id.nav_about_us:
                         // launch new intent instead of loading fragment
                         startActivity(new Intent(HomeActivity.this, AboutUsActivity.class));

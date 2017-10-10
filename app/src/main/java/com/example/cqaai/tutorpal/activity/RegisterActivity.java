@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,11 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
@@ -85,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
-                                    startActivity(new Intent(RegisterActivity.this, GeneralSettingActivity.class));
+                                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                                     finish();
                                 }
                             }

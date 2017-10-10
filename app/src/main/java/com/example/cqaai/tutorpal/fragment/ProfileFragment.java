@@ -1,153 +1,154 @@
 package com.example.cqaai.tutorpal.fragment;
 
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.cqaai.tutorpal.Firebase.FirebaseDatabaseHelper;
+import com.example.cqaai.tutorpal.Firebase.FirebaseStorageHelper;
+import com.example.cqaai.tutorpal.Helper.Helper;
+import com.example.cqaai.tutorpal.Helper.SimpleDividerItemDecoration;
+
 
 import com.example.cqaai.tutorpal.R;
-import com.example.cqaai.tutorpal.activity.GeneralSettingActivity;
-import com.example.cqaai.tutorpal.activity.HomeActivity;
-import com.example.cqaai.tutorpal.activity.LoginActivity;
-import com.example.cqaai.tutorpal.activity.PrivacyPolicyActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.cqaai.tutorpal.activity.EditProfileActivity;
+import com.example.cqaai.tutorpal.activity.FirebaseApplication;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ProfileFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    private Button btnSettings;
+    private static final String TAG = ProfileFragment.class.getSimpleName();
 
+    private ImageView profilePhoto;
 
+    private TextView profileName;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextView country;
 
-    private OnFragmentInteractionListener mListener;
+    private TextView userStatus;
+
+    private RecyclerView recyclerView;
+
+    private LinearLayoutManager linearLayoutManager;
+
+    private String id;
+
+    private static final int REQUEST_READ_PERMISSION = 120;
 
     public ProfileFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_profile, container, false);
-
-
-            btnSettings = (Button) root.findViewById(R.id.settings_button);
-
-            btnSettings.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                startActivity(new Intent(v.ProfileFragment.this, GeneralSettingActivity.class));
-                    Intent intent = new Intent(getActivity(), GeneralSettingActivity.class);
-                    startActivity(intent);
-
-                }
-            });
-        return root;
-
-
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        setHasOptionsMenu(true);
+    }
 
-//            btnSettings = (Button) getView().findViewById(R.id.settings_button);
-//
-//            btnSettings.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-////                startActivity(new Intent(v.ProfileFragment.this, GeneralSettingActivity.class));
-//                    Intent intent = new Intent(getActivity(), PrivacyPolicyActivity.class);
-//                    startActivity(intent);
-//
-//                }
-//            });
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        getActivity().setTitle("My Profile");
+
+        profileName = (TextView)view.findViewById(R.id.profile_name);
+        country = (TextView)view.findViewById(R.id.country);
+        profileName.setVisibility(View.GONE);
+        country.setVisibility(View.GONE);
+
+        profilePhoto = (ImageView)view.findViewById(R.id.circleView);
+        profilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent, Helper.SELECT_PICTURE);
+            }
+        });
+
+        recyclerView = (RecyclerView)view.findViewById(R.id.profile_list);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+
+//        ((FirebaseApplication)getActivity().getApplication()).getFirebaseAuth();
+//        id = ((FirebaseApplication)getActivity().getApplication()).getFirebaseUserAuthenticateId();
+
+        FirebaseDatabaseHelper firebaseDatabaseHelper = new FirebaseDatabaseHelper();
+        firebaseDatabaseHelper.isUserKeyExist(id, getActivity(), recyclerView);
+        return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.edit_profile, menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_edit_profile){
+            Intent editProfileIntent = new Intent(getActivity(), EditProfileActivity.class);
+            getActivity().startActivity(editProfileIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("user id has entered onActivityResult ");
+        if (requestCode == Helper.SELECT_PICTURE) {
+            Uri selectedImageUri = data.getData();
+            String imagePath = getPath(selectedImageUri);
+            FirebaseStorageHelper storageHelper = new FirebaseStorageHelper(getActivity());
+
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_PERMISSION);
+                return;
+            }
+            storageHelper.saveProfileImageToCloud(id, selectedImageUri, profilePhoto);
         }
     }
 
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+        assert cursor != null;
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        int columnIndex = cursor.getColumnIndex(projection[0]);
+        String filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_READ_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(getActivity(), "Sorry!!!, you can't use this app without granting this permission", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@
     package="com.example.cqaai.tutorpal">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -18,13 +19,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.GeneralSettingActivity" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.ResetPasswordActivity" />
+        <activity android:name=".activity.GeneralSettingActivity" android:parentActivityName=".activity.ProfileActivity"/>
+        <activity android:name=".activity.RegisterActivity" android:parentActivityName=".activity.LoginActivity"/>
+        <activity android:name=".activity.ResetPasswordActivity" android:parentActivityName=".activity.LoginActivity"/>
         <activity android:name=".activity.HomeActivity" />
-        <activity android:name=".activity.AboutUsActivity" />
-        <activity android:name=".activity.ApplyTutor" />
-        <activity android:name=".activity.PrivacyPolicyActivity"></activity>
+        <activity android:name=".activity.AboutUsActivity"
+            android:parentActivityName=".activity.HomeActivity"
+            />
+        <activity android:name=".activity.ApplyTutor" android:parentActivityName=".activity.HomeActivity"/>
+        <activity android:name=".activity.PrivacyPolicyActivity" android:parentActivityName=".activity.HomeActivity"/>
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.EditProfileActivity" android:parentActivityName=".activity.ProfileActivity"/>
+        <activity android:name=".activity.EarningActivity" android:parentActivityName=".activity.ProfileActivity"/>
+        <activity android:name=".activity.ScheduleActivity" android:parentActivityName=".activity.ProfileActivity"/>
+        <activity android:name=".activity.RatingReviewActivity" android:parentActivityName=".activity.ProfileActivity"/>
+        <activity android:name=".activity.RequestActivity"></activity>
     </application>
 
 </manifest>

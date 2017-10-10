@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_camera_alt_black_24dp"
+            android:title="@string/menu_profile" />
+        <item
+            android:id="@+id/nav_earning"
+            android:icon="@drawable/ic_photo_library_black_24dp"
+            android:title="@string/earnings" />
+        <item
+            android:id="@+id/nav_schedule"
+            android:icon="@drawable/ic_slideshow_black_24dp"
+            android:title="@string/schedule" />
+        <item
+            android:id="@+id/nav_review"
+            android:icon="@drawable/ic_build_black_24dp"
+            android:title="@string/rating_and_review" />
+    </group>
+
+    <item android:title="Settings">
+        <menu>
+            <item
+                android:id="@+id/nav_request"
+                android:icon="@drawable/ic_share_black_24dp"
+                android:title="Requests" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_send_black_24dp"
+                android:title="@string/menu_logout" />
+        </menu>
+    </item>
+
+</menu>
